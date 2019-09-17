@@ -336,6 +336,24 @@ public:
 		return to;
 	}
 
+	/////////////////////////////////////////////////////////////////////////////
+	// This is added for Project1 
+	iterator find_gt(iterator begin, iterator end, int data)
+	{
+		// Go through the list and check if the data in the list is bigger than
+		// what the user entered
+		for (; begin != end; ++begin)
+		{
+			if (*begin > data)
+			{
+				return begin;
+			}
+		}
+
+		// If it's not anywhere in the middle then return end
+		return end;
+	}
+
 private:
 	int   theSize;
 	Node* head;
