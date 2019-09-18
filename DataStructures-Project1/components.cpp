@@ -3,6 +3,21 @@
 #include <fstream>
 #include <string>
 #include <iterator>
+#include <iomanip>
+
+// This function will output the graph data structure
+void printGraph(Vector <List<int>>& graph)
+{
+	for (int i = 0; i < graph.size(); ++i)
+	{
+		std::cout << "list" << i << " ";
+		for (List<int>::iterator graphList = graph[i].begin(); graphList != graph[i].end(); ++graphList)
+		{
+			std::cout << *graphList << " ";
+		}
+		std::cout << std::endl;
+	}
+}
 
 int main()
 {
@@ -29,36 +44,45 @@ int main()
 		input.open(fileName.c_str());
 	}
 
-	// Outputting file (used for testing)
+	// For testing purposes
+	std::string inputString = "";
+	int numInFile = 0;
+	int vecInt = 0;
+
+	bool endLine = false;
+
 	while (!input.eof())
 	{
-		getline(input, fileName);
-		std::cout << fileName << std::endl;
-	}
+		// Create new list and push back the list onto the graph
+		List<int> newList;
+		graph.push_back(newList);
 
-	// This block of code is for testing the find_gt() function
-	{
-		List<int> test;
-
-		for (int i = 0; i < 6; ++i)
+		while (!endLine)
 		{
-			test.push_back(i);
-		}
+			input >> inputString;
+			std::cout << inputString << " ";
 
-		test.find_gt(test.begin(), test.end(), 4);
+			numInFile = std::stoi(inputString);
+			graph[vecInt].push_back(numInFile);
+
+			if (input.peek() == '\n' || input.eof())
+			{
+				endLine = true;
+			}
+		}
 
 		std::cout << std::endl;
 
-		List<int>::iterator ptr;
-		for (ptr = test.begin(); ptr != test.end(); ++ptr)
-		{
-			std::cout << *ptr << " ";
-		}
+		// Add one to the vector integer (what keeps track of the 
+		// position in the vector)
+		++vecInt;
 
-		ptr = test.find_gt(test.begin(), test.end(), 3);
+		// Reset the boolean
+		endLine = false; 
 
-		std::cout << *ptr << std::endl;
+		//std::cout << fileName << std::endl;
 	}
-	
 
+	// Print the graph
+	printGraph(graph);
 }
