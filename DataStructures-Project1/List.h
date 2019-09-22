@@ -338,10 +338,16 @@ public:
 
 	/////////////////////////////////////////////////////////////////////////////
 	// This is added for Project1 
-	iterator find_gt(iterator begin, iterator end, int data)
+	// Precondtion: This function will accept iterators for the list and also the data that it is 
+	// looking for.
+	// Postcondition: The function will return an iterator to the location before the data that is being
+	// searched for
+	iterator find_gt(iterator begin, iterator end, Object data)
 	{
 		// Go through the list and check if the data in the list is bigger than
 		// what the user entered
+
+		// Note to self: could also make this a while loop
 		for (; begin != end; ++begin)
 		{
 			if (*begin > data)
@@ -352,6 +358,77 @@ public:
 
 		// If it's not anywhere in the middle then return end
 		return end;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	// This is added for Project1
+	// Precondition: This will accept in a list
+	// Postcondition: This will check to see if there are any common elements and if there are then
+	// it will return true, it will return false otherwise.
+	bool commonElement(List <Object>& comp)
+	{
+		// For deciding which list is bigger.
+		int bigger = 0;
+
+		// Setting bigger based on the size of the lists
+		if (size() > comp.size())
+		{
+			bigger = size();
+		}
+		else
+		{
+			bigger = comp.size();
+		}
+
+		// Going through the lists and finding common elements
+		for (int i = 0; i < bigger; ++i)
+		{
+			iterator list1 = comp.begin();
+			iterator list2 = begin();
+
+			if (*list1 == *list2)
+			{
+				return true;
+			}
+			else 
+			{
+				++list1;
+				++list2;
+			}
+		}
+
+		return false;
+	}	///////////////////////////////////////////////////////////////
+	// This function was added for Project1
+	// Pre condition is that rhs is the smaller of the two lists
+	// Post condition is that the two lists are merged. The function
+	// merges the two lists
+	void mergeNoDups(const List<Object>& rhs)
+	{
+		// Iterators to go through the lists
+		List<Object>::const_iterator smallList = rhs.begin();
+		List<Object>::iterator insertPlace;
+		List<Object>::const_iterator insertPlaceNext;
+
+		// This will go through small list and insert the values if necessary
+		while (smallList != rhs.end())
+		{
+			// This will be used for placing the value into the list
+			insertPlace = find_gt(begin(), end(), *smallList);
+			// This iterator will be used to check the value below insertPlace
+			insertPlaceNext = find_gt(begin(), end(), *smallList);
+			--insertPlaceNext;
+
+			// Checking if the value can be inserted (there are no dublicates) and inserting it
+			if (!(*insertPlace == *smallList) && !(*insertPlaceNext == *smallList))
+			{
+				insert(insertPlace, (*smallList));
+			}
+
+			// Adding to small list iterator
+			++smallList;
+		}
+
 	}
 
 private:
