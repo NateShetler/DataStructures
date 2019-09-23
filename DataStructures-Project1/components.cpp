@@ -131,8 +131,8 @@ int main()
 	}
 }
 
-// This will accept two int values
-// This will swap the two int values
+// Pre: This will accept two int references values
+// Post: This will swap the two int values
 void swap(int& first, int& second)
 {
 	int temp = first;
@@ -141,6 +141,10 @@ void swap(int& first, int& second)
 }
 
 // This will be used in the sort function to partition the vector
+// Pre: This accepts a vector of ints, and integers for where the
+// first and last elements are.
+// Post: This will "partition" the vector so that the sorting can
+// be done. 
 int partition(Vector <int>& line, int first, int last)
 {
 	// This is the pivot point
@@ -167,7 +171,9 @@ int partition(Vector <int>& line, int first, int last)
 }
 
 // This is basically an implementation of a quicksort
-// This will sort the vector in accending order.
+// Pre: This will accept a vector of  ints, and integers for where the 
+// first and last element are.
+// Post: This will sort the vector in accending order.
 void sort(Vector <int>& line, int first, int last)
 {
 	if (first < last)
@@ -181,8 +187,8 @@ void sort(Vector <int>& line, int first, int last)
 	}
 }
 
-// This function will accept an ifstream and graph
-// This function will create the graph in the correct format
+// Pre: This function will accept an ifstream and graph
+// Post: This function will create the graph in the correct format
 void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 {
 	// Used for getting input
@@ -240,7 +246,8 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 	}
 }
 
-// This function will output the graph data structure
+// Pre: This function will accept in a vector of lists of ints (graph) by reference
+// Post: This function will output the graph data structure
 void printGraph(Vector <List<int>>& graph)
 {
 	std::cout << "The adjacency list for your graph is: " << std::endl;
