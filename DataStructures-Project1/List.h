@@ -366,36 +366,33 @@ public:
 	// it will return true, it will return false otherwise.
 	bool commonElement(List <Object>& comp)
 	{
-		// For deciding which list is bigger.
-		int bigger = 0;
 
-		// Setting bigger based on the size of the lists
-		if (size() > comp.size())
-		{
-			bigger = size();
-		}
-		else
-		{
-			bigger = comp.size();
-		}
+		// Iterators for the lists
+		iterator list1 = begin();
+		iterator list2 = comp.begin();
 
-		// Going through the lists and finding common elements
-		for (int i = 0; i < bigger; ++i)
+		// Go through both lists checking to see if there are 
+		// any shared components.
+		for (int i = 0; i < size() + comp.size() ; ++i)
 		{
-			iterator list1 = comp.begin();
-			iterator list2 = begin();
-
+			// Check to see if the element is the same
 			if (*list1 == *list2)
 			{
 				return true;
 			}
-			else 
+
+			// Add to the smaller of the two lists' iterators.
+			if (*list1 < *list2)
 			{
 				++list1;
+			}
+			else
+			{
 				++list2;
 			}
 		}
 
+		// If no common elements are found then return false. 
 		return false;
 	}	///////////////////////////////////////////////////////////////
 	// This function was added for Project1
