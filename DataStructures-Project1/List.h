@@ -338,32 +338,31 @@ public:
 
 	/////////////////////////////////////////////////////////////////////////////
 	// This is added for Project1 
-	// Precondtion: This function will accept iterators for the list and also the data that it is 
+	// Pre: This function will accept iterators for the list and also the data that it is 
 	// looking for.
-	// Postcondition: The function will return an iterator to the location before the data that is being
+	// Post: The function will return an iterator to the location before the data that is being
 	// searched for
 	iterator find_gt(iterator begin, iterator end, Object data)
 	{
 		// Go through the list and check if the data in the list is bigger than
 		// what the user entered
-
-		// Note to self: could also make this a while loop
-		for (; begin != end; ++begin)
+		while (begin != end)
 		{
 			if (*begin > data)
 			{
 				return begin;
 			}
+			++begin;
 		}
-
+		
 		// If it's not anywhere in the middle then return end
 		return end;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
 	// This is added for Project1
-	// Precondition: This will accept in a list
-	// Postcondition: This will check to see if there are any common elements and if there are then
+	// Pre: This will accept in a list
+	// Post: This will check to see if there are any common elements and if there are then
 	// it will return true, it will return false otherwise.
 	bool commonElement(List <Object>& comp)
 	{
@@ -400,8 +399,8 @@ public:
 		return false;
 	}	///////////////////////////////////////////////////////////////
 	// This function was added for Project1
-	// Pre condition is that rhs is the smaller of the two lists
-	// Post condition is that the two lists are merged. The function
+	// Pre: Make sure that rhs is the smaller of the two lists
+	// Post: The two lists will be merged. The function
 	// merges the two lists
 	void mergeNoDups(const List<Object>& rhs)
 	{
@@ -428,7 +427,6 @@ public:
 			// Adding to small list iterator
 			++smallList;
 		}
-
 	}
 
 private:

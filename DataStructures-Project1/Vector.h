@@ -153,6 +153,46 @@ public:
 		return &objects[size()];
 	}
 
+	/////////////////////////////////////
+	// This is added for Project1
+	// Pre: This function will be passed an iterator to the element that
+	// needs to be removed.
+	// Post: This function will remove the desired element.
+	void erase(iterator iter)
+	{
+		// Iterators for the graph
+		iterator graphVec = iter;
+		iterator graphNext = iter;
+
+		// Move this iterator over one so swapping can happen
+		++graphNext;
+
+		// This loop will move the element that needs to be removed
+		// to the end of the vector
+		while (graphVec != end() && graphNext != end())
+		{
+			// This block below will do the swap
+			Object temp = *graphVec;
+			*graphVec = *graphNext;
+			*graphNext = temp;
+
+			// Double check that the next position isn't 
+			// the end
+			if (graphNext != end())
+			{
+				// Add to the graphNext iterator
+				++graphNext;
+			}
+			
+			// Add to the graph iterator
+			++graphVec;
+		}
+
+		// This will remove the element
+		pop_back();
+
+	}
+
 	static const int SPARE_CAPACITY = 2;
 
 private:

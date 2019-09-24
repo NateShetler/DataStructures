@@ -9,7 +9,6 @@
 // This will swap the two int values
 void swap(int& first, int& second);
 
-
 // This will be used in the sort function to partition the vector
 int partition(Vector <int>& line, int first, int last);
 
@@ -39,6 +38,7 @@ int main()
 	bool quit = false;
 	// These will be used for the merging loop
 	int firstNum = 0, secondNum = 0;
+
 	// Prompt the user for a file and then get the filename
 	std::cout << "Please enter the graph filename to process:" << std::endl;
 	std::cin >> fileName;
@@ -66,7 +66,7 @@ int main()
 	list2.push_back(3);
 	list2.push_back(4);
 
-	//Need to fix commonElement
+	// Need to fix commonElement
 	if (list1.commonElement(list2))
 	{
 		std::cout << "Common element found" << std::endl;
@@ -81,7 +81,7 @@ int main()
 
 	// Print the graph
 	printGraph(graph);
-
+	
 	// Looping to see if the user wants to merge any lists
 	while (!quit)
 	{
@@ -118,10 +118,18 @@ int main()
 				if (firstNum > secondNum)
 				{
 					graph[secondNum].mergeNoDups(graph[firstNum]);
+
+					// This iterator will be used to remove the smaller element
+					Vector<List<int>>::iterator eraseIt= graph.begin() + firstNum;
+					graph.erase(eraseIt);
 				}
 				else
 				{
 					graph[firstNum].mergeNoDups(graph[secondNum]);
+
+					// This iterator will be used to remove the smaller element
+					Vector<List<int>>::iterator eraseIt2 = graph.begin() + secondNum;
+					graph.erase(eraseIt2);
 				}
 
 				// Print the graph
@@ -129,6 +137,7 @@ int main()
 			}
 		}
 	}
+
 }
 
 // Pre: This will accept two int references values
@@ -228,11 +237,9 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 
 		// Reset the boolean
 		endLine = false;
-
-		//std::cout << fileName << std::endl;
 	}
 
-	// Sort the vectors and creating the graph
+	// Sort the vectors and create the graph
 	for (int i = 0; i < sorting.size(); ++i)
 	{
 		sort(sorting[i], 0, sorting[i].size() - 1);
@@ -251,6 +258,7 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 void printGraph(Vector <List<int>>& graph)
 {
 	std::cout << "The adjacency list for your graph is: " << std::endl;
+
 	// Output the graph
 	for (int i = 0; i < graph.size(); ++i)
 	{
