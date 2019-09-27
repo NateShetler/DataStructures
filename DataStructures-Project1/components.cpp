@@ -5,23 +5,6 @@
 #include <iterator>
 #include <iomanip>
 
-// Pre: This will accept two int references values
-// Post: This will swap the two int values
-void swap(int& first, int& second);
-
-// This will be used in the sort function to partition the vector
-// Pre: This accepts a vector of ints, and integers for where the
-// first and last elements are.
-// Post: This will "partition" the vector so that the sorting can
-// be done. 
-int partition(Vector <int>& line, int first, int last);
-
-// This is basically an implementation of a quicksort
-// Pre: This will accept a vector of  ints, and integers for where the 
-// first and last element are.
-// Post: This will sort the vector in accending order.
-void sort(Vector <int>& line, int first, int last);
-
 // Pre: This function will accept an ifstream and graph
 // Post: This function will create the graph in the correct format
 void createGraph(std::ifstream& input, Vector <List<int>>& graph);
@@ -29,7 +12,6 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph);
 // Pre: This function will accept in a vector of lists of ints (graph) by reference
 // Post: This function will output the graph data structure
 void printGraph(Vector <List<int>>& graph);
-
 
 int main()
 {
@@ -58,27 +40,6 @@ int main()
 		std::cout << "Please enter a valid filename: " << std::endl;
 		std::cin >> fileName;
 		input.open(fileName.c_str());
-	}
-
-	List<int> list1;
-	List<int> list2;
-
-	list1.push_back(1);
-	list1.push_back(2);
-	list1.push_back(4);
-	list1.push_back(5);
-	list2.push_back(0);
-	list2.push_back(4);
-	list2.push_back(5);
-
-	// Need to fix commonElement
-	if (list1.commonElement(list2))
-	{
-		std::cout << "Common element found" << std::endl;
-	}
-	else
-	{
-		std::cout << "No common elements" << std::endl;
 	}
 	
 	// Create the graph
@@ -120,20 +81,20 @@ int main()
 			else
 			{
 				// Merging the functions based on size.
-				if (firstNum > secondNum)
-				{
-					graph[secondNum].mergeNoDups(graph[firstNum]);
-
-					// This iterator will be used to remove the smaller element
-					Vector<List<int>>::iterator eraseIt= graph.begin() + firstNum;
-					graph.erase(eraseIt);
-				}
-				else
+				if (graph[firstNum].size() > graph[secondNum].size())
 				{
 					graph[firstNum].mergeNoDups(graph[secondNum]);
 
 					// This iterator will be used to remove the smaller element
-					Vector<List<int>>::iterator eraseIt2 = graph.begin() + secondNum;
+					Vector<List<int>>::iterator eraseIt= graph.begin() + secondNum;
+					graph.erase(eraseIt);
+				}
+				else
+				{
+					graph[secondNum].mergeNoDups(graph[firstNum]);
+
+					// This iterator will be used to remove the smaller element
+					Vector<List<int>>::iterator eraseIt2 = graph.begin() + firstNum;
 					graph.erase(eraseIt2);
 				}
 
@@ -145,61 +106,6 @@ int main()
 
 }
 
-// Pre: This will accept two int references values
-// Post: This will swap the two int values
-void swap(int& first, int& second)
-{
-	int temp = first;
-	first = second;
-	second = temp;
-}
-
-// This will be used in the sort function to partition the vector
-// Pre: This accepts a vector of ints, and integers for where the
-// first and last elements are.
-// Post: This will "partition" the vector so that the sorting can
-// be done. 
-int partition(Vector <int>& line, int first, int last)
-{
-	// This is the pivot point
-	int pivot = line[last];
-
-	// This is the index of the smaller element
-	int indexOf = (first - 1);
-
-	for (int i = first; i <= last - 1; i++)
-	{
-		// This will swap if the current element 
-		// is smaller than the pivot point 
-		if (line[i] < pivot)
-		{
-			indexOf++;
-			swap(line[indexOf], line[i]);
-		}
-	}
-
-	// Additional swap
-	swap(line[indexOf + 1], line[last]);
-
-	return (indexOf + 1);
-}
-
-// This is basically an implementation of a quicksort
-// Pre: This will accept a vector of  ints, and integers for where the 
-// first and last element are.
-// Post: This will sort the vector in accending order.
-void sort(Vector <int>& line, int first, int last)
-{
-	if (first < last)
-	{
-		// Partition
-		int pivot = partition(line, first, last);
-
-		// Recursively sorting the elements
-		sort(line, first, pivot - 1);
-		sort(line, pivot + 1, last);
-	}
-}
 
 // Pre: This function will accept an ifstream and graph
 // Post: This function will create the graph in the correct format
@@ -222,30 +128,28 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 		Vector<int> newVec;
 		sorting.push_back(newVec);
 
+		// Create a new list
+		List<int> newList;
+
+		// Push list onto graph
+		graph.push_back(newList);
+
 		while (!endLine)
 		{
 			// Get the input and convert to int
 			input >> inputString;
 			numInFile = std::stoi(inputString);
-			sorting[vecInt].push_back(numInFile);
+
+			// Get the insertion point
+			List<int>::iterator insertPlace = graph[vecInt].find_gt(graph[vecInt].begin(), graph[vecInt].end(), numInFile);
+
+			// Insert the integer
+			graph[vecInt].insert(insertPlace, numInFile);
 
 			// If the next character is \n then set bool to true
 			if (input.peek() == '\n' || input.eof())
 			{
 				endLine = true;
-
-				// Create and sort the list
-				sort(sorting[vecInt], 0, sorting[vecInt].size() - 1);
-				List<int> newList;
-
-				// Push list onto graph
-				graph.push_back(newList);
-
-				// Push the elements onto the list
-				for (int i = 0; i < sorting[vecInt].size(); ++i)
-				{
-					graph[vecInt].push_back(sorting[vecInt][i]);
-				}
 			}
 		}
 
