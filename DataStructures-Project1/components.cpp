@@ -86,7 +86,7 @@ int main()
 					graph[firstNum].mergeNoDups(graph[secondNum]);
 
 					// This iterator will be used to remove the smaller element
-					Vector<List<int>>::iterator eraseIt= graph.begin() + secondNum;
+					Vector<List<int>>::iterator eraseIt = graph.begin() + secondNum;
 					graph.erase(eraseIt);
 				}
 				else
@@ -103,9 +103,7 @@ int main()
 			}
 		}
 	}
-
 }
-
 
 // Pre: This function will accept an ifstream and graph
 // Post: This function will create the graph in the correct format
@@ -120,14 +118,8 @@ void createGraph(std::ifstream& input, Vector <List<int>>& graph)
 	// in the file
 	bool endLine = false;
 
-	Vector <Vector<int>> sorting;
-
 	while (!input.eof())
 	{
-		// Create new list and push back the list onto the graph
-		Vector<int> newVec;
-		sorting.push_back(newVec);
-
 		// Create a new list
 		List<int> newList;
 

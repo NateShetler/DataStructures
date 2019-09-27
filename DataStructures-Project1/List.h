@@ -366,7 +366,6 @@ public:
 	// it will return true, it will return false otherwise.
 	bool commonElement(List <Object>& comp)
 	{
-
 		// Iterators for the lists
 		iterator list1 = begin();
 		iterator list2 = comp.begin();
