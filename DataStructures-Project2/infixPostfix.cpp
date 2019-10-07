@@ -78,6 +78,10 @@ void evalPostfix(std::string &entireExpression)
 	// This will be the stack used for storing the numbers entered
 	std::stack<double> numbers;
 
+	// For keeping track of how many operators and
+	// numbers that you have. 
+	int operatorCount = 0;
+	int numberCount = 0;
 
 	// Go through the user input until a new line is reached.
 	while (entireExpression.length() > 0)
@@ -101,10 +105,17 @@ void evalPostfix(std::string &entireExpression)
 
 			double inputNum = std::stod(userExpression);
 			numbers.push(inputNum);
+			
+			// Add to number cout
+			++numberCount;
 		}
 		else
 		{
 
+			if (numbers.size() >= 2)
+			{
+				
+			}
 			// Get the operands and then pop them off the stack
 			operand1 = numbers.top();
 			numbers.pop();
@@ -116,24 +127,49 @@ void evalPostfix(std::string &entireExpression)
 			if (userExpression == "*")
 			{
 				numbers.push(operand2 * operand1);
+
+				// Add to operator count
+				++operatorCount;
 			}
 			else if (userExpression == "/")
 			{
 				numbers.push(operand2 / operand1);
+
+				// Add to operator count
+				++operatorCount;
 			}
 			else if (userExpression == "+")
 			{
 				numbers.push(operand2 + operand1);
+
+				// Add to operator count
+				++operatorCount;
 			}
 			else if (userExpression == "-")
 			{
 				numbers.push(operand2 - operand1);
+
+				// Add to operator count
+				++operatorCount;
 			}
 		}
 	}
 
-	// Output the evaluation
-	std::cout << "Your expression evaluates to " << numbers.top() << std::endl;
+	if ((numberCount - operatorCount) == 1)
+	{
+		// Output the evaluation
+		std::cout << "Your expression evaluates to " << numbers.top() << std::endl;
+	}
+	else if ((numberCount - operatorCount) < 1)
+	{
+		// If the user entered an expression with too few operators
+		std::cout << "This is not a valid postfix expression: too few operators." << std::endl;
+	}
+	else if ((numberCount - operatorCount) > 1)
+	{
+		// If the user entered an expression with too many operators
+		std::cout << "This is not a valid postfix expression: too many operators." << std::endl;
+	}
 
 	// To make the program look nice :)
 	std::cout << std::endl;
