@@ -32,8 +32,18 @@ int main()
 		std::cout << "0. Exit" << std::endl;
 		std::cout << "1. Infix to postfix" << std::endl;
 		std::cout << "2. Postfix evaluation" << std::endl;
+
+		// Get user input and make sure it's valid
 		std::cout << "Please enter a menu option [0-2]:" << std::endl;
 		std::cin >> userInput;
+
+		// Deal with bad input type
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(10000, '\n');
+			userInput = -1;
+		}
 
 		if (userInput == 1)
 		{
@@ -62,6 +72,9 @@ int main()
 		else
 		{
 			std::cout << "Please enter only 0, 1, or 2." << std::endl;
+
+			// To make it look better
+			std::cout << std::endl;
 		}
 	}
 }
