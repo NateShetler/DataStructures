@@ -2,7 +2,6 @@
 #include <stack>
 #include <string>
 #include <cctype>
-#include <cstdlib>
 
 // Pre: This function will not accept any parameters
 // Post: This function will evaluate a postfix expression entered by the user
@@ -22,7 +21,7 @@ void infixToPostfix(std::string &infixExpression);
 int main()
 {
 	// For getting user input
-	int userInput = 0;
+	int userInput = -1;
 	// For keeping track of the loop
 	bool quit = false;
 	// This will be used for the users expression
@@ -83,8 +82,11 @@ void evalPostfix(std::string &entireExpression)
 	int operatorCount = 0;
 	int numberCount = 0;
 
+	// For keeping track of if there are too many operators
+	bool tooMany = false;
+
 	// Go through the user input until a new line is reached.
-	while (entireExpression.length() > 0)
+	while (entireExpression.length() > 0 && !tooMany)
 	{
 		// Get each thing in the string
 		userExpression = entireExpression.substr(0, entireExpression.find(' '));
@@ -114,61 +116,64 @@ void evalPostfix(std::string &entireExpression)
 
 			if (numbers.size() >= 2)
 			{
-				
-			}
-			// Get the operands and then pop them off the stack
-			operand1 = numbers.top();
-			numbers.pop();
-			operand2 = numbers.top();
-			numbers.pop();
+				// Get the operands and then pop them off the stack
+				operand1 = numbers.top();
+				numbers.pop();
+				operand2 = numbers.top();
+				numbers.pop();
 
-			// Checking to see which operator it is and then do the operation
-			// and push it onto the stack
-			if (userExpression == "*")
+				// Checking to see which operator it is and then do the operation
+				// and push it onto the stack
+				if (userExpression == "*")
+				{
+					numbers.push(operand2 * operand1);
+
+					// Add to operator count
+					++operatorCount;
+				}
+				else if (userExpression == "/")
+				{
+					numbers.push(operand2 / operand1);
+
+					// Add to operator count
+					++operatorCount;
+				}
+				else if (userExpression == "+")
+				{
+					numbers.push(operand2 + operand1);
+
+					// Add to operator count
+					++operatorCount;
+				}
+				else if (userExpression == "-")
+				{
+					numbers.push(operand2 - operand1);
+
+					// Add to operator count
+					++operatorCount;
+				}
+			}
+			else
 			{
-				numbers.push(operand2 * operand1);
+				// Setting too many to true
+				tooMany = true;
 
-				// Add to operator count
-				++operatorCount;
+				// If the user entered an expression with too many operators
+				std::cout << "This is not a valid postfix expression: too many operators." << std::endl;
 			}
-			else if (userExpression == "/")
-			{
-				numbers.push(operand2 / operand1);
-
-				// Add to operator count
-				++operatorCount;
-			}
-			else if (userExpression == "+")
-			{
-				numbers.push(operand2 + operand1);
-
-				// Add to operator count
-				++operatorCount;
-			}
-			else if (userExpression == "-")
-			{
-				numbers.push(operand2 - operand1);
-
-				// Add to operator count
-				++operatorCount;
-			}
+			
 		}
 	}
 
-	if ((numberCount - operatorCount) == 1)
+	if (((numberCount - operatorCount) == 1) && (!tooMany))
 	{
 		// Output the evaluation
 		std::cout << "Your expression evaluates to " << numbers.top() << std::endl;
 	}
-	else if ((numberCount - operatorCount) < 1)
+	else if ((numberCount - operatorCount) > 1)
 	{
 		// If the user entered an expression with too few operators
 		std::cout << "This is not a valid postfix expression: too few operators." << std::endl;
-	}
-	else if ((numberCount - operatorCount) > 1)
-	{
-		// If the user entered an expression with too many operators
-		std::cout << "This is not a valid postfix expression: too many operators." << std::endl;
 	}
 
 	// To make the program look nice :)
@@ -206,8 +211,6 @@ void infixToPostfix(std::string &infixExpression)
 	std::string postFixExpression = "";
 	// String for going through the infix expression
 	std::string conversionTool = "";
-	// Will be used for putting char on postfix conversion
-	std::string postOperator = "";
 
 	while (infixExpression.length() > 0)
 	{
@@ -258,16 +261,11 @@ void infixToPostfix(std::string &infixExpression)
 
 				bool quitPop = false;
 
-				while (!quitPop)
+				while (!quitPop && !infixCharacters.empty())
 				{
-					if (infixCharacters.empty())
+					if ((setPrecedence(infixCharacters.top())) >= (setPrecedence(conversionTool)))
 					{
-						quitPop = true;
-
-					}
-					else if ((setPrecedence(infixCharacters.top())) >= (setPrecedence(conversionTool)))
-					{
-						// Add teh item to the postfix expression
+						// Add the item to the postfix expression
 						postFixExpression += (infixCharacters.top() + " ");
 
 						// Pop the item off
@@ -287,7 +285,7 @@ void infixToPostfix(std::string &infixExpression)
 	}
 
 	// Pop off the remaining items
-	for (int i = 0; i < infixCharacters.size(); ++i)
+	for (int i = 0; i < infixCharacters.size() + 1; ++i)
 	{
 		postFixExpression += (infixCharacters.top() + " ");
 
