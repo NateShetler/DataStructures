@@ -5,7 +5,7 @@
 
 class Employee {
 public:
-	Employee(int, std::string, int) {};
+	Employee(int, std::string, int);
 	int id() const { return identifier; }
 	std::string name() const { return lastname; }
 	int sal() const { return salary; }

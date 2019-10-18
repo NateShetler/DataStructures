@@ -47,7 +47,7 @@ std::vector<Employee> employees()
 			input >> salary;
 
 			// Create the employee
-			Employee newEmp = Employee(identifier, lastName, salary);
+			Employee newEmp{identifier, lastName, salary};
 
 			// Put the new employee onto the vector
 			empVec.push_back(newEmp);
@@ -75,19 +75,115 @@ std::vector<Employee> employees()
 	return empVec;
 }
 
-/*
-std::map<int, vector<Employee>> mapEmpDept(std::vector<Employee>& emp)
-{
 
+std::map<int, std::vector<Employee>> mapEmpDept(std::vector<Employee>& emp)
+{
+	// For keeping track of the runtime
+	clock_t start, stop;
+	start = clock();
+	// The department map
+	std::map<int, std::vector<Employee>> deptMap;
+	// First four digits int
+	int firstFour = 0;
+
+	// Create the department map
+	for (int i = 0; i < emp.size(); ++i)
+	{
+		// This will get the first four digits of the 
+		// identifier integer
+		firstFour = emp[i].id() / 10000;
+
+		// Put the new item into the map
+		deptMap[firstFour].push_back(emp[i]);
+	}
+
+	stop = clock();
+	std::cout << "ORDERED Map creation with department as key clock ticks: " << double(stop - start) << std::endl;
+	std::cout << "ORDERED Map number of departments:" << deptMap.size() << std::endl;
+
+	// Return the department map
+	return deptMap;
 }
+
 std::map<int, std::vector<Employee>> mapSalRange(std::vector<Employee>& emp)
 {
+	// For keeping track of the runtime
+	clock_t start, stop;
+	start = clock();
+	// The department map
+	std::map<int, std::vector<Employee>> salMap;
+	// First four digits int
+	int salaryRange = 0;
+	// To figure out how many digits exist
+	int numDigits = 1;
+	// To calculate number of digits
+	int calcDigits = 0;
 
+	// Create the salary map
+	for (int i = 0; i < emp.size(); ++i)
+	{
+		salaryRange = emp[i].sal();
+		std::cout << "Test sal range " << salaryRange << std::endl;
+		calcDigits = salaryRange;
+
+		// This will determine how many digits are in the salary
+		while (calcDigits /= 10)
+		{
+			++numDigits;
+		}
+
+		std::cout << "Test numdigits " << numDigits << std::endl;
+		// If statements to deal with different salary sizes
+		if (numDigits == 5)
+		{
+			salaryRange = salaryRange / 10000;
+			salaryRange = salaryRange * 10000;
+		}
+		else if (numDigits == 6)
+		{
+			salaryRange = salaryRange / 10000;
+			salaryRange = salaryRange * 10000;
+		}
+
+		std::cout << "Test salary range " << salaryRange << std::endl;
+		// Put the new item into the map 
+		salMap[salaryRange].push_back(emp[i]);
+
+		// Reset numdigits
+		numDigits = 1;
+	}
+
+	stop = clock();
+	std::cout << "ORDERED Map creation with salary as key clock ticks: " << double(stop - start) << std::endl;
+	std::cout << "ORDERED Map number of salary ranges:" << salMap.size() << std::endl;
+
+	// Return the department map
+	return salMap;
 }
+
+
 void printSalRange(std::map<int, std::vector<Employee>>& salRange)
 {
+	// For keeping track of the largest vector
+	int largestNum = 0;
+	int largestGroup = 0;
 
+	// This will go through the map
+	for (std::map<int, std::vector<Employee>>::iterator salIt = salRange.begin(); salIt != salRange.end(); ++salIt)
+	{
+		std::cout << "ORDERED Map Salary Range " << salIt->first << " contains " << salIt->second.size() << std::endl;
+
+		// Determine the largest salary group
+		if (salIt->second.size() > largestNum)
+		{
+			largestNum = salIt->second.size();
+			largestGroup = salIt->first;
+		}
+	}
+
+	std::cout << "ORDERED Map Salary Range with most employees: " << largestGroup << " containing " << largestNum << " employees " << std::endl;
 }
+/*
 std::unordered_map<int, std::vector<Employee>> umapEmpDept(std::vector<Employee>& emp)
 {
 
