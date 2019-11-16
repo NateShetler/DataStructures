@@ -28,39 +28,69 @@ const Comparable& median3(vector<Comparable>& a, int left, int right)
 	return a[right - 1];
 }
 
-/**
- * Internal quicksort method that makes recursive calls.
- * Uses median-of-three partitioning and a cutoff of 10.
- * a is an array of Comparable items.
- * left is the left-most index of the subarray.
- * right is the right-most index of the subarray.
- */
+// New quicksort (no cutoff)
 template <typename Comparable>
 void quicksort(vector<Comparable>& a, int left, int right)
 {
-	if (left + 10 <= right)
-	{
-		const Comparable& pivot = median3(a, left, right);
+	// A boolean for the loop
+	bool done = false;
 
-		// Begin partitioning
-		int i = left, j = right - 1;
-		for (; ; )
+	// If the size of the array is less than 2
+	if ((right - left) < 2)
+	{
+		// If they are out of order, swap them
+		if (a[right] < a[left])
 		{
-			while (a[++i] < pivot) {}
-			while (pivot < a[--j]) {}
+			std::swap(a[left], a[right]);
+		}
+	}
+	else if (left < right) // This block will do the big sorting
+	{
+		// These are the i and j values discussed in class
+		int i = left, j = right - 1;
+
+		// Get the pivot using median3
+		const Comparable& pivot = median3(a, left, right); 
+
+		// Loop for sorting
+		while (!done)
+		{
+			// Find first value on the left that's greater than the pivot
+			while (a[++i] < pivot)
+			{
+				// i will be set after the value that is greater than pivot is found
+			}
+
+			// Find the first value on the right that's less than the pivot
+			while (pivot < a[--j])
+			{
+				// j will be set after the value that is less than pivot is found
+			}
+
+			// If i is less than j then swap the two 
 			if (i < j)
+			{
 				std::swap(a[i], a[j]);
+			}
 			else
-				break;
+			{
+				// Otherwise, we are done with this section
+				done = true;
+			}
 		}
 
-		std::swap(a[i], a[right - 1]);  // Restore pivot
+		// Put the pivot back in the correct place
+		std::swap(a[i], a[right - 1]);
 
-		quicksort(a, left, i - 1);     // Sort small elements
-		quicksort(a, i + 1, right);    // Sort large elements
+		// Do the same thing recursively for both sides
+		quicksort(a, left, i - 1);
+		quicksort(a, i + 1, right);
 	}
-	else  // Do an insertion sort on the subarray
-		insertionSort(a, left, right);
+	else
+	{
+		// If all else is done, return (may not need)
+		return;
+	}
 }
 
 /**
@@ -70,152 +100,6 @@ template <typename Comparable>
 void quicksort(vector<Comparable>& a)
 {
 	quicksort(a, 0, a.size() - 1);
-}
-
-
-/**
- * Internal selection method that makes recursive calls.
- * Uses median-of-three partitioning and a cutoff of 10.
- * Places the kth smallest item in a[k-1].
- * a is an array of Comparable items.
- * left is the left-most index of the subarray.
- * right is the right-most index of the subarray.
- * k is the desired rank (1 is minimum) in the entire array.
- */
-template <typename Comparable>
-void quickSelect(vector<Comparable>& a, int left, int right, int k)
-{
-	if (left + 10 <= right)
-	{
-		const Comparable& pivot = median3(a, left, right);
-
-		// Begin partitioning
-		int i = left, j = right - 1;
-		for (; ; )
-		{
-			while (a[++i] < pivot) {}
-			while (pivot < a[--j]) {}
-			if (i < j)
-				std::swap(a[i], a[j]);
-			else
-				break;
-		}
-
-		std::swap(a[i], a[right - 1]);  // Restore pivot
-
-			// Recurse; only this part changes
-		if (k <= i)
-			quickSelect(a, left, i - 1, k);
-		else if (k > i + 1)
-			quickSelect(a, i + 1, right, k);
-	}
-	else  // Do an insertion sort on the subarray
-		insertionSort(a, left, right);
-}
-
-/**
- * Quick selection algorithm.
- * Places the kth smallest item in a[k-1].
- * a is an array of Comparable items.
- * k is the desired rank (1 is minimum) in the entire array.
- */
-template <typename Comparable>
-void quickSelect(vector<Comparable>& a, int k)
-{
-	quickSelect(a, 0, a.size() - 1, k);
-}
-
-
-template <typename Comparable>
-void SORT(vector<Comparable>& items)
-{
-	if (items.size() > 1)
-	{
-		vector<Comparable> smaller;
-		vector<Comparable> same;
-		vector<Comparable> larger;
-
-		auto chosenItem = items[items.size() / 2];
-
-		for (auto& i : items)
-		{
-			if (i < chosenItem)
-				smaller.push_back(std::move(i));
-			else if (chosenItem < i)
-				larger.push_back(std::move(i));
-			else
-				same.push_back(std::move(i));
-		}
-
-		SORT(smaller);     // Recursive call!
-		SORT(larger);      // Recursive call!
-
-		std::move(begin(smaller), end(smaller), begin(items));
-		std::move(begin(same), end(same), begin(items) + smaller.size());
-		std::move(begin(larger), end(larger), end(items) - larger.size());
-
-		/*
-				items.clear( );
-				items.insert( end( items ), begin( smaller ), end( smaller ) );
-				items.insert( end( items ), begin( same ), end( same ) );
-				items.insert( end( items ), begin( larger ), end( larger ) );
-		*/
-	}
-}
-
-/*
- * This is the more public version of insertion sort.
- * It requires a pair of iterators and a comparison
- * function object.
- */
-template <typename RandomIterator, typename Comparator>
-void insertionSort(const RandomIterator& begin,
-	const RandomIterator& end,
-	Comparator lessThan)
-{
-	if (begin == end)
-		return;
-
-	RandomIterator j;
-
-	for (RandomIterator p = begin + 1; p != end; ++p)
-	{
-		auto tmp = std::move(*p);
-		for (j = p; j != begin && lessThan(tmp, *(j - 1)); --j)
-			* j = std::move(*(j - 1));
-		*j = std::move(tmp);
-	}
-}
-
-/*
- * The two-parameter version calls the three parameter version, using C++11 decltype
- */
-template <typename RandomIterator>
-void insertionSort(const RandomIterator& begin,
-	const RandomIterator& end)
-{
-	insertionSort(begin, end, less<decltype(*begin)>{ });
-}
-
-/**
- * Internal insertion sort routine for subarrays
- * that is used by quicksort.
- * a is an array of Comparable items.
- * left is the left-most index of the subarray.
- * right is the right-most index of the subarray.
- */
-template <typename Comparable>
-void insertionSort(vector<Comparable>& a, int left, int right)
-{
-	for (int p = left + 1; p <= right; ++p)
-	{
-		Comparable tmp = std::move(a[p]);
-		int j;
-
-		for (j = p; j > left && tmp < a[j - 1]; --j)
-			a[j] = std::move(a[j - 1]);
-		a[j] = std::move(tmp);
-	}
 }
 
 #endif

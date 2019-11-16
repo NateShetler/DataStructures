@@ -300,6 +300,7 @@ void randomOrder(std::vector<int>& fillVec, int& size)
 		random = rand() % i;
 		fillVec.push_back(random);
 	}
+
 }
 
 // Pre: this function will accept in a vector that needs filled 
@@ -314,6 +315,7 @@ void standardOrder(std::vector<int>& fillVec, int& size)
 	{
 		fillVec.push_back(i);
 	}
+
 }
 
 // Pre: this function will accept in a vector that needs filled 
@@ -324,21 +326,20 @@ void reverseOrder(std::vector<int>& fillVec, int& size)
 	// Make sure the vector is clear
 	clearVector(fillVec);
 
-	for (int i = size; i > 1; --i)
+	for (int i = size; i > 0; --i)
 	{
 		fillVec.push_back(i);
 	}
+
 }
 
 // Pre: This will accept in a vector
 // Post: This will remove all items from the vector
 void clearVector(std::vector<int>& clearVec)
 {	
-	if (clearVec.size() > 0)
+	// Go through the vector and get rid of what's in it
+	while (clearVec.size() > 0)
 	{
-		for (int i = 0; i < clearVec.size(); ++i)
-		{
-			clearVec.pop_back();
-		}
+		clearVec.pop_back();
 	}
 }
